@@ -49,15 +49,16 @@ public class EmployeeController {
     }
 
     @PutMapping("vacation/{index}/{day}")
-    public ResponseEntity vacationEmployee(@PathVariable int index,@PathVariable int day, @RequestBody Employees employees) {
+    public ResponseEntity vacationEmployee(@PathVariable int index,@PathVariable int day) {
 
-            if(employees.getAnnualLeave() < day){
-                return ResponseEntity.status(400).body(new ApiResponse("You don't have AnnualLeave"));
+        for (Employees employee : employeesList) {
+            if (employee.getAnnualLeave() < day) {
+                return ResponseEntity.status(200).body(new ApiResponse("You don't have enough Annual Leave"));
             }
-            employees.setOnLeave(true);
-           int newAnnaulLeave =  employees.getAnnualLeave() - day;
-           employees.setAnnualLeave(newAnnaulLeave);
-
+            employee.setOnLeave(true);
+            int newAnnaulLeave = employee.getAnnualLeave() - day;
+            employee.setAnnualLeave(newAnnaulLeave);
+        }
         return ResponseEntity.status(200).body(new ApiResponse("You take "+day + " day Of "));
     }
 
